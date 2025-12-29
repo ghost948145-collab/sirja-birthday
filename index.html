@@ -6,133 +6,125 @@
 
 <style>
 body {
-    margin: 0;
-    font-family: 'Segoe UI', sans-serif;
-    background: linear-gradient(135deg, #ffd6e8, #c8e7ff);
-    text-align: center;
-    color: #333;
-    overflow-x: hidden;
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #ffd6e8, #c8e7ff);
+  text-align: center;
+  overflow-x: hidden;
 }
 
 .container {
-    padding: 40px 20px;
-}
-
-h1 {
-    color: #ff4f9a;
-    font-size: 3em;
+  padding: 40px 20px;
 }
 
 .card {
-    background: white;
-    border-radius: 20px;
-    padding: 25px;
-    max-width: 800px;
-    margin: 25px auto;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  background: white;
+  border-radius: 20px;
+  padding: 30px;
+  max-width: 900px;
+  margin: auto;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
 }
 
-.q {
-    font-weight: bold;
-    margin-top: 18px;
+h1 { color: #ff4f9a; }
+
+button {
+  background: #ff4f9a;
+  color: white;
+  border: none;
+  padding: 14px 25px;
+  border-radius: 30px;
+  margin: 10px;
+  font-size: 1em;
+  cursor: pointer;
+}
+button:hover { background: #e8438c; }
+
+/* Animations */
+.fade-slide {
+  animation: fadeSlide 0.6s ease;
+}
+@keyframes fadeSlide {
+  from { opacity: 0; transform: translateX(40px); }
+  to { opacity: 1; transform: translateX(0); }
 }
 
+/* Gallery */
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 20px;
+}
 .gallery img {
-    width: 100%;
-    max-width: 220px;
-    margin: 10px;
-    border-radius: 15px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  margin: 8px;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
 
-.footer {
-    margin-top: 40px;
-    font-size: 1.2em;
-    color: #555;
+/* Confetti */
+.confetti {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  top: -10px;
+  animation: fall linear forwards;
 }
-
-.heart {
-    position: fixed;
-    color: #ff4f9a;
-    font-size: 20px;
-    animation: float 6s infinite ease-in;
-}
-
-@keyframes float {
-    0% { bottom: -10px; opacity: 0; }
-    50% { opacity: 1; }
-    100% { bottom: 110%; opacity: 0; }
-}
-
-#countdown {
-    font-size: 1.6em;
-    color: #ff4f9a;
+@keyframes fall {
+  to {
+    transform: translateY(110vh) rotate(360deg);
+    opacity: 0;
+  }
 }
 </style>
 </head>
 
 <body>
 
-<!-- Background Music (muted first for autoplay rule) -->
 <audio id="bgMusic" loop muted>
   <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_0b9f1a6b62.mp3?filename=happy-birthday-to-you-piano-version-13976.mp3" type="audio/mpeg">
 </audio>
 
 <div class="container">
 
-<h1>🎂 Happy Birthday Sirja 🎉</h1>
-<p>From online chats to endless calls… you mean more than you know 💖</p>
-
-<!-- Countdown -->
-<div class="card">
-    <h2>🌙 Midnight Countdown</h2>
-    <div id="countdown">Loading...</div>
+<!-- PAGE 1 -->
+<div id="page-countdown" class="card">
+  <h2>🌙 Countdown to Something Special</h2>
+  <div id="countdown">Loading...</div>
 </div>
 
-<!-- Q&A -->
-<div class="card">
-    <div class="q">💬 How did we even meet?</div>
-    <div>A: Online… and somehow became something special ✨</div>
-
-    <div class="q">💬 One thing you do all the time?</div>
-    <div>A: Laugh at everything 😄</div>
-
-    <div class="q">💬 Our favorite thing together?</div>
-    <div>A: Fun calls for hours… “okayyyyyyyy” 📞💫</div>
-
-    <div class="q">💬 What do you give me?</div>
-    <div>A: Happiness, comfort, and smiles 🤍</div>
-
-    <div class="q">💬 What should you remember?</div>
-    <div>A: You are deeply loved 💖</div>
+<!-- PAGE 2 -->
+<div id="page-quiz" class="card" style="display:none;">
+  <h2 id="question"></h2>
+  <div id="options"></div>
 </div>
 
-<!-- Photos -->
-<div class="card">
-    <h2>🖼️ Our Moments</h2>
-    <div class="gallery">
-    <img src="images/6237745613357386540.jpg">
-    <img src="images/6237745613357386541.jpg">
-    <img src="images/6237745613357386542.jpg">
-    <img src="images/6237745613357386543.jpg">
-    <img src="images/6237745613357386544.jpg">
+<!-- PAGE 3 -->
+<div id="page-birthday" class="card" style="display:none;">
+  <h1>🎉 Happy Birthday Sirja 🎉</h1>
+  <p>You reached the special moment 💖</p>
+
+  <div class="gallery">
+    <img src="images/sirja1.jpg">
+    <img src="images/sirja2.jpg">
+    <img src="images/sirja3.jpg">
+    <img src="images/sirja4.jpg">
+    <img src="images/sirja5.jpg">
+  </div>
 </div>
 
-</div>
-
-<!-- Final Message -->
-<div class="card">
-    <h2>💌 Final Message</h2>
-    <p>
-        Sirja, thank you for every laugh and every moment.  
-        You make life brighter just by being you.  
-        Never forget how happy and loved you are 💕
-    </p>
-    <p><strong>— With all my love, PAVAN 💖</strong></p>
-</div>
-
-<div class="footer">
-    Always here, always cheering for you 🌷
+<!-- PAGE 4 -->
+<div id="page-final" class="card" style="display:none;">
+  <h2>💌 Final Message</h2>
+  <p>
+    From online chats to endless calls,  
+    laughing at everything and saying “okayyyyyyyy”…  
+    you became someone truly special 💕
+  </p>
+  <p><strong>— With all my love, YOUR NAME 💖</strong></p>
 </div>
 
 </div>
@@ -141,44 +133,106 @@ h1 {
 const music = document.getElementById("bgMusic");
 const countdownEl = document.getElementById("countdown");
 
-// floating hearts
-setInterval(() => {
-    const heart = document.createElement("div");
-    heart.className = "heart";
-    heart.innerHTML = "💖";
-    heart.style.left = Math.random() * 100 + "vw";
-    document.body.appendChild(heart);
-    setTimeout(() => heart.remove(), 6000);
-}, 500);
-
-// MIDNIGHT MUSIC LOGIC (PLAY ONLY ONCE)
-const played = localStorage.getItem("musicPlayed");
-
-// target midnight
+/* COUNTDOWN */
 const target = new Date();
-target.setHours(24, 0, 0, 0);
+target.setHours(24,0,0,0);
 
-setInterval(() => {
-    const now = new Date().getTime();
-    const diff = target - now;
+const timer = setInterval(() => {
+  const now = new Date().getTime();
+  const diff = target - now;
 
-    if (diff <= 0) {
-        countdownEl.innerHTML = "🎉 It’s Your Birthday, Sirja! 🎉";
+  if (diff <= 0) {
+    clearInterval(timer);
+    startBirthday();
+    return;
+  }
 
-        if (!played) {
-            music.muted = false;
-            music.play().catch(() => {});
-            localStorage.setItem("musicPlayed", "true");
-        }
-        return;
-    }
+  const h = Math.floor((diff/(1000*60*60))%24);
+  const m = Math.floor((diff/(1000*60))%60);
+  const s = Math.floor((diff/1000)%60);
 
-    const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
-    const m = Math.floor((diff / (1000 * 60)) % 60);
-    const s = Math.floor((diff / 1000) % 60);
-
-    countdownEl.innerHTML = `${h}h ${m}m ${s}s to go 💫`;
+  countdownEl.innerHTML = `${h}h ${m}m ${s}s`;
 }, 1000);
+
+function startBirthday() {
+  if (!localStorage.getItem("musicPlayed")) {
+    music.muted = false;
+    music.play().catch(()=>{});
+    localStorage.setItem("musicPlayed","true");
+  }
+  document.getElementById("page-countdown").style.display="none";
+  document.getElementById("page-quiz").style.display="block";
+  showQuestion();
+}
+
+/* QUIZ */
+const quiz = [
+  {
+    q: "How did we meet?",
+    options: ["School", "College", "Online", "Party"],
+    answer: 2
+  },
+  {
+    q: "What do I do all the time?",
+    options: ["Sleep", "Laugh at everything", "Get angry", "Ignore"],
+    answer: 1
+  },
+  {
+    q: "Our favorite thing?",
+    options: ["Studying", "Short texts", "Long fun calls", "Silence"],
+    answer: 2
+  }
+];
+
+let current = 0;
+
+function showQuestion() {
+  const box = document.getElementById("page-quiz");
+  box.classList.remove("fade-slide");
+  void box.offsetWidth;
+  box.classList.add("fade-slide");
+
+  const q = quiz[current];
+  document.getElementById("question").innerText = q.q;
+  const optionsDiv = document.getElementById("options");
+  optionsDiv.innerHTML = "";
+
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement("button");
+    btn.innerText = opt;
+    btn.onclick = () => {
+      alert(i === q.answer ? "✅ Correct!" : "❌ Correct answer: " + q.options[q.answer]);
+      current++;
+      current < quiz.length ? showQuestion() : endQuiz();
+    };
+    optionsDiv.appendChild(btn);
+  });
+}
+
+/* END */
+function endQuiz() {
+  document.getElementById("page-quiz").style.display="none";
+  document.getElementById("page-birthday").style.display="block";
+  launchConfetti();
+
+  setTimeout(() => {
+    document.getElementById("page-birthday").style.display="none";
+    document.getElementById("page-final").style.display="block";
+  }, 6000);
+}
+
+/* CONFETTI */
+function launchConfetti() {
+  for (let i = 0; i < 180; i++) {
+    const c = document.createElement("div");
+    c.className = "confetti";
+    c.style.left = Math.random() * 100 + "vw";
+    c.style.background = `hsl(${Math.random()*360},100%,60%)`;
+    c.style.animationDuration = (Math.random()*3+2)+"s";
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),6000);
+  }
+}
 </script>
 
 </body>
