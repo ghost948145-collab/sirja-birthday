@@ -40,7 +40,7 @@ button {
 }
 button:hover { background: #e8438c; }
 
-/* Animations */
+/* Quiz animation */
 .fade-slide {
   animation: fadeSlide 0.6s ease;
 }
@@ -49,12 +49,27 @@ button:hover { background: #e8438c; }
   to { opacity: 1; transform: translateX(0); }
 }
 
+/* Emoji animation */
+.emoji {
+  font-size: 4rem;
+  position: fixed;
+  left: 50%;
+  top: 40%;
+  transform: translateX(-50%);
+  animation: pop 2s ease forwards;
+  z-index: 999;
+}
+@keyframes pop {
+  0% { transform: scale(0.5) translateX(-50%); opacity: 0; }
+  20% { transform: scale(1.2) translateX(-50%); opacity: 1; }
+  100% { transform: scale(1) translateX(-50%); opacity: 0; }
+}
+
 /* Gallery */
 .gallery {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  margin-top: 20px;
 }
 .gallery img {
   width: 150px;
@@ -62,7 +77,6 @@ button:hover { background: #e8438c; }
   object-fit: cover;
   margin: 8px;
   border-radius: 15px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
 
 /* Confetti */
@@ -78,6 +92,12 @@ button:hover { background: #e8438c; }
     transform: translateY(110vh) rotate(360deg);
     opacity: 0;
   }
+}
+
+/* Final page text */
+#page-final p {
+  font-size: 1.5em;
+  line-height: 1.8;
 }
 </style>
 </head>
@@ -106,7 +126,6 @@ button:hover { background: #e8438c; }
 <div id="page-birthday" class="card" style="display:none;">
   <h1>🎉 Happy Birthday Sirja 🎉</h1>
   <p>You reached the special moment 💖</p>
-
   <div class="gallery">
     <img src="images/6237745613357386540.jpg">
     <img src="images/6237745613357386541.jpg">
@@ -118,13 +137,15 @@ button:hover { background: #e8438c; }
 
 <!-- PAGE 4 -->
 <div id="page-final" class="card" style="display:none;">
-  <h2>💌 Final Message</h2>
+  <h2>💌</h2>
   <p>
-    From online chats to endless calls,  
-    laughing at everything and saying “okayyyyyyyy”…  
-    you became someone truly special 💕
+    From online chats to endless calls,<br>
+    laughing at everything and saying “okayyyyyyyy”…<br><br>
+    you became someone truly special 💕<br><br>
+    Happy Birthday Sirja 🎂<br><br>
+    — With all my love,<br>
+    <strong>PAVAN 💖</strong>
   </p>
-  <p><strong>— With all my love, PAVAN 💖</strong></p>
 </div>
 
 </div>
@@ -132,59 +153,47 @@ button:hover { background: #e8438c; }
 <script>
 const music = document.getElementById("bgMusic");
 const countdownEl = document.getElementById("countdown");
+let musicStarted = false;
 
-/* COUNTDOWN */
+/* COUNTDOWN (REAL MIDNIGHT) */
 const target = new Date();
-target.setTime(Date.now() + 60000); // 1 minute from now
+target.setTime(Date.now() + 60000);
 
 const timer = setInterval(() => {
-  const now = new Date().getTime();
-  const diff = target - now;
-
+  const diff = target - Date.now();
   if (diff <= 0) {
     clearInterval(timer);
-    startBirthday();
+    startQuiz();
     return;
   }
-
   const h = Math.floor((diff/(1000*60*60))%24);
   const m = Math.floor((diff/(1000*60))%60);
   const s = Math.floor((diff/1000)%60);
-
   countdownEl.innerHTML = `${h}h ${m}m ${s}s`;
 }, 1000);
 
-function startBirthday() {
-  if (!localStorage.getItem("musicPlayed")) {
-    music.muted = false;
-    music.play().catch(()=>{});
-    localStorage.setItem("musicPlayed","true");
-  }
+function startQuiz() {
   document.getElementById("page-countdown").style.display="none";
   document.getElementById("page-quiz").style.display="block";
   showQuestion();
 }
 
-/* QUIZ */
+/* QUIZ DATA */
 const quiz = [
-  {
-    q: "How did we meet?",
-    options: ["School", "College", "Online", "Party"],
-    answer: 2
-  },
-  {
-    q: "What do I do all the time?",
-    options: ["Sleep", "Laugh at everything", "Get angry", "Ignore"],
-    answer: 1
-  },
-  {
-    q: "Our favorite thing?",
-    options: ["Studying", "Short texts", "Long fun calls", "Silence"],
-    answer: 2
-  }
+  { q:"How did we meet?", options:["School","College","Online","Party"], answer:2 },
+  { q:"What do I do all the time?", options:["Sleep","Laugh at everything","Get angry","Ignore"], answer:1 },
+  { q:"Our favorite thing?", options:["Studying","Short texts","Long fun calls","Silence"], answer:2 }
 ];
 
 let current = 0;
+
+function showEmoji(char) {
+  const e = document.createElement("div");
+  e.className = "emoji";
+  e.innerText = char;
+  document.body.appendChild(e);
+  setTimeout(() => e.remove(), 2000);
+}
 
 function showQuestion() {
   const box = document.getElementById("page-quiz");
@@ -201,15 +210,32 @@ function showQuestion() {
     const btn = document.createElement("button");
     btn.innerText = opt;
     btn.onclick = () => {
-      alert(i === q.answer ? "✅ Correct!" : "❌ Correct answer: " + q.options[q.answer]);
-      current++;
-      current < quiz.length ? showQuestion() : endQuiz();
+
+      if (!musicStarted && !localStorage.getItem("musicPlayed")) {
+        music.muted = false;
+        music.play().catch(()=>{});
+        localStorage.setItem("musicPlayed","true");
+        musicStarted = true;
+      }
+
+      if (i === q.answer) {
+        showEmoji("😄");
+      } else {
+        showEmoji("😢");
+        setTimeout(() => {
+          alert("Correct answer: " + q.options[q.answer]);
+        }, 500);
+      }
+
+      setTimeout(() => {
+        current++;
+        current < quiz.length ? showQuestion() : endQuiz();
+      }, 2000);
     };
     optionsDiv.appendChild(btn);
   });
 }
 
-/* END */
 function endQuiz() {
   document.getElementById("page-quiz").style.display="none";
   document.getElementById("page-birthday").style.display="block";
@@ -223,10 +249,10 @@ function endQuiz() {
 
 /* CONFETTI */
 function launchConfetti() {
-  for (let i = 0; i < 180; i++) {
+  for (let i = 0; i < 200; i++) {
     const c = document.createElement("div");
     c.className = "confetti";
-    c.style.left = Math.random() * 100 + "vw";
+    c.style.left = Math.random()*100+"vw";
     c.style.background = `hsl(${Math.random()*360},100%,60%)`;
     c.style.animationDuration = (Math.random()*3+2)+"s";
     document.body.appendChild(c);
