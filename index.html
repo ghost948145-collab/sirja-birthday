@@ -19,26 +19,41 @@ body {
   background: white;
   border-radius: 20px;
   padding: 35px;
-  max-width: 950px;
+  max-width: 960px;
   margin: auto;
   box-shadow: 0 10px 25px rgba(0,0,0,0.15);
 }
 
-h1 { color: #ff4f9a; font-size: 2.8em; }
+h1 { color: #ff4f9a; font-size: 3em; }
 
 button {
   background: #ff4f9a;
   color: white;
   border: none;
-  padding: 14px 26px;
+  padding: 15px 28px;
   border-radius: 30px;
   margin: 10px;
-  font-size: 1em;
+  font-size: 1.05em;
   cursor: pointer;
 }
 button:hover { background: #e8438c; }
 
-/* Animations */
+/* Overlay */
+#startOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(255,240,248,0.97);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+#startOverlay button {
+  font-size: 1.3em;
+  padding: 18px 36px;
+}
+
+/* Quiz animation */
 .fade-slide {
   animation: fadeSlide 0.6s ease;
 }
@@ -47,7 +62,7 @@ button:hover { background: #e8438c; }
   to { opacity: 1; transform: translateX(0); }
 }
 
-/* Emoji popup */
+/* Emoji feedback */
 .emoji {
   font-size: 4rem;
   position: fixed;
@@ -63,28 +78,21 @@ button:hover { background: #e8438c; }
   100% { transform: scale(1) translateX(-50%); opacity: 0; }
 }
 
-/* Page 3 Gallery */
-.bday-title {
-  font-size: 3em;
-  margin-bottom: 10px;
-}
-.bday-sub {
-  font-size: 1.4em;
-  margin-bottom: 25px;
-}
-
+/* Photo grid – NO CROP */
 .gallery {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 15px;
-  margin-top: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 18px;
+  margin-top: 25px;
 }
 .gallery img {
   width: 100%;
-  height: 150px;
-  object-fit: cover;
-  border-radius: 18px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.25);
+  height: 180px;
+  object-fit: contain;   /* ✅ NO CROPPING */
+  background: #fff;
+  border-radius: 16px;
+  padding: 6px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
 
 /* Confetti */
@@ -104,7 +112,7 @@ button:hover { background: #e8438c; }
 
 /* Final page */
 #page-final p {
-  font-size: 1.6em;
+  font-size: 1.7em;
   line-height: 1.9;
 }
 </style>
@@ -112,9 +120,13 @@ button:hover { background: #e8438c; }
 
 <body>
 
-<!-- MUSIC -->
+<!-- START OVERLAY -->
+<div id="startOverlay">
+  <button onclick="startExperience()">💖 Tap to Start 🎶</button>
+</div>
+
 <audio id="bgMusic" loop>
-  <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_0b9f1a6b62.mp3?filename=happy-birthday-to-you-piano-version-13976.mp3" type="audio/mpeg">
+  <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_0b9f1a6b62.mp3?filename=happy-birthday-to-you-piano-version-13976.mp3">
 </audio>
 
 <div class="container">
@@ -133,8 +145,8 @@ button:hover { background: #e8438c; }
 
 <!-- PAGE 3 -->
 <div id="page-birthday" class="card" style="display:none;">
-  <div class="bday-title">🎉 Happy Birthday Sirja 🎂</div>
-  <div class="bday-sub">Today is all about YOU 💖✨</div>
+  <h1>🎉 Happy Birthday Sirja 🎂💖</h1>
+  <p style="font-size:1.4em;">Today is all about YOU ✨</p>
 
   <div class="gallery">
     <img src="images/6237745613357386540.jpg">
@@ -150,8 +162,7 @@ button:hover { background: #e8438c; }
   <p>
     From online chats to endless calls,<br>
     laughing at everything and saying <b>“okayyyyyyyy”</b> 😄<br><br>
-    You make life brighter just by being you 💕<br><br>
-    Stay happy, stay smiling, always 🌸<br><br>
+    You are special, you are loved, and you always will be 💕<br><br>
     <strong>— With all my love,<br>PAVAN 💖</strong>
   </p>
 </div>
@@ -160,26 +171,36 @@ button:hover { background: #e8438c; }
 
 <script>
 const music = document.getElementById("bgMusic");
+const overlay = document.getElementById("startOverlay");
 const countdownEl = document.getElementById("countdown");
 
-/* COUNTDOWN */
-const target = new Date();
-target.setTime(Date.now() + 60000);
+/* START EXPERIENCE */
+function startExperience() {
+  music.play().catch(()=>{});
+  overlay.style.display = "none";
+  startCountdown();
+}
 
-const timer = setInterval(() => {
-  const diff = target - Date.now();
-  if (diff <= 0) {
-    clearInterval(timer);
-    document.getElementById("page-countdown").style.display="none";
-    document.getElementById("page-quiz").style.display="block";
-    showQuestion();
-    return;
-  }
-  const h = Math.floor((diff/(1000*60*60))%24);
-  const m = Math.floor((diff/(1000*60))%60);
-  const s = Math.floor((diff/1000)%60);
-  countdownEl.innerHTML = `${h}h ${m}m ${s}s`;
-}, 1000);
+/* COUNTDOWN */
+function startCountdown() {
+  const target = new Date();
+  target.setTime(Date.now() + 60000);
+
+  const timer = setInterval(() => {
+    const diff = target - Date.now();
+    if (diff <= 0) {
+      clearInterval(timer);
+      document.getElementById("page-countdown").style.display="none";
+      document.getElementById("page-quiz").style.display="block";
+      showQuestion();
+      return;
+    }
+    const h = Math.floor((diff/(1000*60*60))%24);
+    const m = Math.floor((diff/(1000*60))%60);
+    const s = Math.floor((diff/1000)%60);
+    countdownEl.innerHTML = `${h}h ${m}m ${s}s`;
+  }, 1000);
+}
 
 /* QUIZ */
 const quiz = [
@@ -187,16 +208,14 @@ const quiz = [
   { q:"What do I do all the time?", options:["Sleep","Laugh at everything","Get angry","Ignore"], answer:1 },
   { q:"Our favorite thing?", options:["Studying","Short texts","Long fun calls","Silence"], answer:2 }
 ];
-
 let current = 0;
-let musicStarted = false;
 
-function showEmoji(char) {
-  const e = document.createElement("div");
-  e.className = "emoji";
-  e.innerText = char;
-  document.body.appendChild(e);
-  setTimeout(() => e.remove(), 2000);
+function showEmoji(e) {
+  const el = document.createElement("div");
+  el.className = "emoji";
+  el.innerText = e;
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),2000);
 }
 
 function showQuestion() {
@@ -210,27 +229,15 @@ function showQuestion() {
   const optionsDiv = document.getElementById("options");
   optionsDiv.innerHTML = "";
 
-  q.options.forEach((opt, i) => {
+  q.options.forEach((opt,i)=>{
     const btn = document.createElement("button");
     btn.innerText = opt;
-    btn.onclick = () => {
-
-      // 🎶 MUSIC STARTS HERE — GUARANTEED
-      if (!musicStarted) {
-        music.play().catch(()=>{});
-        musicStarted = true;
-      }
-
-      if (i === q.answer) {
-        showEmoji("😄");
-      } else {
-        showEmoji("😢");
-      }
-
-      setTimeout(() => {
+    btn.onclick = ()=>{
+      showEmoji(i===q.answer ? "😄" : "😢");
+      setTimeout(()=>{
         current++;
         current < quiz.length ? showQuestion() : endQuiz();
-      }, 2000);
+      },2000);
     };
     optionsDiv.appendChild(btn);
   });
@@ -241,20 +248,20 @@ function endQuiz() {
   document.getElementById("page-birthday").style.display="block";
   launchConfetti();
 
-  setTimeout(() => {
+  setTimeout(()=>{
     document.getElementById("page-birthday").style.display="none";
     document.getElementById("page-final").style.display="block";
-  }, 6500);
+  },6500);
 }
 
 /* CONFETTI */
 function launchConfetti() {
-  for (let i = 0; i < 220; i++) {
-    const c = document.createElement("div");
-    c.className = "confetti";
-    c.style.left = Math.random()*100+"vw";
-    c.style.background = `hsl(${Math.random()*360},100%,60%)`;
-    c.style.animationDuration = (Math.random()*3+2)+"s";
+  for (let i=0;i<250;i++) {
+    const c=document.createElement("div");
+    c.className="confetti";
+    c.style.left=Math.random()*100+"vw";
+    c.style.background=`hsl(${Math.random()*360},100%,60%)`;
+    c.style.animationDuration=(Math.random()*3+2)+"s";
     document.body.appendChild(c);
     setTimeout(()=>c.remove(),6500);
   }
