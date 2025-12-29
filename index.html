@@ -13,26 +13,24 @@ body {
   overflow-x: hidden;
 }
 
-.container {
-  padding: 40px 20px;
-}
+.container { padding: 40px 20px; }
 
 .card {
   background: white;
   border-radius: 20px;
-  padding: 30px;
-  max-width: 900px;
+  padding: 35px;
+  max-width: 950px;
   margin: auto;
   box-shadow: 0 10px 25px rgba(0,0,0,0.15);
 }
 
-h1 { color: #ff4f9a; }
+h1 { color: #ff4f9a; font-size: 2.8em; }
 
 button {
   background: #ff4f9a;
   color: white;
   border: none;
-  padding: 14px 25px;
+  padding: 14px 26px;
   border-radius: 30px;
   margin: 10px;
   font-size: 1em;
@@ -40,7 +38,7 @@ button {
 }
 button:hover { background: #e8438c; }
 
-/* Quiz animation */
+/* Animations */
 .fade-slide {
   animation: fadeSlide 0.6s ease;
 }
@@ -49,7 +47,7 @@ button:hover { background: #e8438c; }
   to { opacity: 1; transform: translateX(0); }
 }
 
-/* Emoji animation */
+/* Emoji popup */
 .emoji {
   font-size: 4rem;
   position: fixed;
@@ -65,18 +63,28 @@ button:hover { background: #e8438c; }
   100% { transform: scale(1) translateX(-50%); opacity: 0; }
 }
 
-/* Gallery */
+/* Page 3 Gallery */
+.bday-title {
+  font-size: 3em;
+  margin-bottom: 10px;
+}
+.bday-sub {
+  font-size: 1.4em;
+  margin-bottom: 25px;
+}
+
 .gallery {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 15px;
+  margin-top: 20px;
 }
 .gallery img {
-  width: 150px;
+  width: 100%;
   height: 150px;
   object-fit: cover;
-  margin: 8px;
-  border-radius: 15px;
+  border-radius: 18px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.25);
 }
 
 /* Confetti */
@@ -94,17 +102,18 @@ button:hover { background: #e8438c; }
   }
 }
 
-/* Final page text */
+/* Final page */
 #page-final p {
-  font-size: 1.5em;
-  line-height: 1.8;
+  font-size: 1.6em;
+  line-height: 1.9;
 }
 </style>
 </head>
 
 <body>
 
-<audio id="bgMusic" loop muted>
+<!-- MUSIC -->
+<audio id="bgMusic" loop>
   <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_0b9f1a6b62.mp3?filename=happy-birthday-to-you-piano-version-13976.mp3" type="audio/mpeg">
 </audio>
 
@@ -112,8 +121,8 @@ button:hover { background: #e8438c; }
 
 <!-- PAGE 1 -->
 <div id="page-countdown" class="card">
-  <h2>🌙 Countdown to Something Special</h2>
-  <div id="countdown">Loading...</div>
+  <h2>🌙 Something special is coming…</h2>
+  <div id="countdown">Loading…</div>
 </div>
 
 <!-- PAGE 2 -->
@@ -124,8 +133,9 @@ button:hover { background: #e8438c; }
 
 <!-- PAGE 3 -->
 <div id="page-birthday" class="card" style="display:none;">
-  <h1>🎉 Happy Birthday Sirja 🎉</h1>
-  <p>You reached the special moment 💖</p>
+  <div class="bday-title">🎉 Happy Birthday Sirja 🎂</div>
+  <div class="bday-sub">Today is all about YOU 💖✨</div>
+
   <div class="gallery">
     <img src="images/6237745613357386540.jpg">
     <img src="images/6237745613357386541.jpg">
@@ -137,14 +147,12 @@ button:hover { background: #e8438c; }
 
 <!-- PAGE 4 -->
 <div id="page-final" class="card" style="display:none;">
-  <h2>💌</h2>
   <p>
     From online chats to endless calls,<br>
-    laughing at everything and saying “okayyyyyyyy”…<br><br>
-    you became someone truly special 💕<br><br>
-    Happy Birthday Sirja 🎂<br><br>
-    — With all my love,<br>
-    <strong>PAVAN 💖</strong>
+    laughing at everything and saying <b>“okayyyyyyyy”</b> 😄<br><br>
+    You make life brighter just by being you 💕<br><br>
+    Stay happy, stay smiling, always 🌸<br><br>
+    <strong>— With all my love,<br>PAVAN 💖</strong>
   </p>
 </div>
 
@@ -153,9 +161,8 @@ button:hover { background: #e8438c; }
 <script>
 const music = document.getElementById("bgMusic");
 const countdownEl = document.getElementById("countdown");
-let musicStarted = false;
 
-/* COUNTDOWN (REAL MIDNIGHT) */
+/* COUNTDOWN */
 const target = new Date();
 target.setTime(Date.now() + 60000);
 
@@ -163,7 +170,9 @@ const timer = setInterval(() => {
   const diff = target - Date.now();
   if (diff <= 0) {
     clearInterval(timer);
-    startQuiz();
+    document.getElementById("page-countdown").style.display="none";
+    document.getElementById("page-quiz").style.display="block";
+    showQuestion();
     return;
   }
   const h = Math.floor((diff/(1000*60*60))%24);
@@ -172,13 +181,7 @@ const timer = setInterval(() => {
   countdownEl.innerHTML = `${h}h ${m}m ${s}s`;
 }, 1000);
 
-function startQuiz() {
-  document.getElementById("page-countdown").style.display="none";
-  document.getElementById("page-quiz").style.display="block";
-  showQuestion();
-}
-
-/* QUIZ DATA */
+/* QUIZ */
 const quiz = [
   { q:"How did we meet?", options:["School","College","Online","Party"], answer:2 },
   { q:"What do I do all the time?", options:["Sleep","Laugh at everything","Get angry","Ignore"], answer:1 },
@@ -186,6 +189,7 @@ const quiz = [
 ];
 
 let current = 0;
+let musicStarted = false;
 
 function showEmoji(char) {
   const e = document.createElement("div");
@@ -211,10 +215,9 @@ function showQuestion() {
     btn.innerText = opt;
     btn.onclick = () => {
 
-      if (!musicStarted && !localStorage.getItem("musicPlayed")) {
-        music.muted = false;
+      // 🎶 MUSIC STARTS HERE — GUARANTEED
+      if (!musicStarted) {
         music.play().catch(()=>{});
-        localStorage.setItem("musicPlayed","true");
         musicStarted = true;
       }
 
@@ -222,9 +225,6 @@ function showQuestion() {
         showEmoji("😄");
       } else {
         showEmoji("😢");
-        setTimeout(() => {
-          alert("Correct answer: " + q.options[q.answer]);
-        }, 500);
       }
 
       setTimeout(() => {
@@ -244,19 +244,19 @@ function endQuiz() {
   setTimeout(() => {
     document.getElementById("page-birthday").style.display="none";
     document.getElementById("page-final").style.display="block";
-  }, 6000);
+  }, 6500);
 }
 
 /* CONFETTI */
 function launchConfetti() {
-  for (let i = 0; i < 200; i++) {
+  for (let i = 0; i < 220; i++) {
     const c = document.createElement("div");
     c.className = "confetti";
     c.style.left = Math.random()*100+"vw";
     c.style.background = `hsl(${Math.random()*360},100%,60%)`;
     c.style.animationDuration = (Math.random()*3+2)+"s";
     document.body.appendChild(c);
-    setTimeout(()=>c.remove(),6000);
+    setTimeout(()=>c.remove(),6500);
   }
 }
 </script>
