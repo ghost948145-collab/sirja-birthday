@@ -179,7 +179,8 @@ function startExperience(){
 /* COUNTDOWN */
 function startCountdown(){
   const target=new Date();
-  target.setTime(Date.now() + 60000);
+  target.setHours(24,0,0,0);
+
 
   const timer=setInterval(()=>{
     const diff=target-Date.now();
