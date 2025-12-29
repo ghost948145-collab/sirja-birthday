@@ -135,7 +135,7 @@ const countdownEl = document.getElementById("countdown");
 
 /* COUNTDOWN */
 const target = new Date();
-target.setMinutes(target.getMinutes() + 1);
+target.setTime(Date.now() + 60000); // 1 minute from now
 
 const timer = setInterval(() => {
   const now = new Date().getTime();
