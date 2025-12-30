@@ -179,7 +179,7 @@ function startExperience(){
 /* COUNTDOWN */
 function startCountdown(){
   const target=new Date();
-  target.setHours(24,0,0,0);
+  target.setTime(Date.now() + 10000);
 
 
   const timer=setInterval(()=>{
